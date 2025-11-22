@@ -139,9 +139,7 @@
     if (!isNaN(parsed)) {
       autoBetInput = parsed;
     } else if (value === '') {
-      // Optional: handle empty string if needed, though parsing '' is NaN
-      // We might want to keep autoBetInput as 0 or previous value,
-      // but usually UI allows empty while typing.
+      autoBetInput = 0;
     }
   };
 

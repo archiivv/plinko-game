@@ -47,14 +47,45 @@
 
   let hasOutstandingBalls = $derived(Object.keys($betAmountOfExistingBalls).length > 0);
 
+  const handleBetAmountInput: FormEventHandler<HTMLInputElement> = (e) => {
+    let value = e.currentTarget.value;
+
+    // Remove any non-numeric/decimal characters
+    value = value.replace(/[^0-9.]/g, '');
+
+    // Handle leading zeros: if value is like "05", change to "5".
+    // But allow "0."
+    if (value.length > 1 && value.startsWith('0') && value[1] !== '.') {
+      value = value.substring(1);
+    }
+
+    // Prevent multiple decimal points
+    const parts = value.split('.');
+    if (parts.length > 2) {
+      value = parts[0] + '.' + parts.slice(1).join('');
+    }
+
+    // Update input value if it changed
+    if (value !== e.currentTarget.value) {
+      e.currentTarget.value = value;
+    }
+
+    // Update store if valid
+    const parsed = parseFloat(value);
+    if (!isNaN(parsed)) {
+      $betAmount = parsed;
+    }
+  };
+
   const handleBetAmountFocusOut: FormEventHandler<HTMLInputElement> = (e) => {
     const parsedValue = parseFloat(e.currentTarget.value.trim());
     if (isNaN(parsedValue)) {
-      $betAmount = -1; // If input field is empty, this forces re-render so its value resets to 0
       $betAmount = 0;
     } else {
       $betAmount = parsedValue;
     }
+    // Force update input value to match store
+    e.currentTarget.value = $betAmount.toString();
   };
 
   function resetAutoBetInterval() {
@@ -87,14 +118,42 @@
     }
   }
 
+  const handleAutoBetInputInput: FormEventHandler<HTMLInputElement> = (e) => {
+    let value = e.currentTarget.value;
+
+    // Remove any non-digit characters
+    value = value.replace(/\D/g, '');
+
+    // Handle leading zeros: if value is like "05", change to "5".
+    if (value.length > 1 && value.startsWith('0')) {
+      value = value.substring(1);
+    }
+
+    // Update input value if it changed
+    if (value !== e.currentTarget.value) {
+      e.currentTarget.value = value;
+    }
+
+    // Update state if valid
+    const parsed = parseInt(value);
+    if (!isNaN(parsed)) {
+      autoBetInput = parsed;
+    } else if (value === '') {
+      // Optional: handle empty string if needed, though parsing '' is NaN
+      // We might want to keep autoBetInput as 0 or previous value,
+      // but usually UI allows empty while typing.
+    }
+  };
+
   const handleAutoBetInputFocusOut: FormEventHandler<HTMLInputElement> = (e) => {
     const parsedValue = parseInt(e.currentTarget.value.trim());
     if (isNaN(parsedValue)) {
-      autoBetInput = -1; // If input field is empty, this forces re-render so its value resets to 0
       autoBetInput = 0;
     } else {
       autoBetInput = parsedValue;
     }
+    // Force update input value to match state
+    e.currentTarget.value = autoBetInput.toString();
   };
 
   function handleBetClick() {
@@ -143,11 +202,10 @@
         <input
           id="betAmount"
           value={$betAmount}
+          oninput={handleBetAmountInput}
           onfocusout={handleBetAmountFocusOut}
           disabled={autoBetInterval !== null}
-          type="number"
-          min="0"
-          step="0.01"
+          type="text"
           inputmode="decimal"
           class={twMerge(
             'w-full rounded-l-md border-2 border-slate-600 bg-slate-900 py-2 pr-2 pl-7 text-sm text-white transition-colors hover:cursor-pointer hover:not-disabled:border-slate-500 focus:border-slate-500 focus:outline-hidden  disabled:cursor-not-allowed disabled:opacity-50',
@@ -226,9 +284,9 @@
           id="autoBetInput"
           value={autoBetInterval === null ? autoBetInput : autoBetsLeft ?? 0}
           disabled={autoBetInterval !== null}
+          oninput={handleAutoBetInputInput}
           onfocusout={handleAutoBetInputFocusOut}
-          type="number"
-          min="0"
+          type="text"
           inputmode="numeric"
           class={twMerge(
             'w-full rounded-md border-2 border-slate-600 bg-slate-900 py-2 pr-8 pl-3 text-sm text-white transition-colors hover:cursor-pointer hover:not-disabled:border-slate-500 focus:border-slate-500 focus:outline-hidden disabled:cursor-not-allowed disabled:opacity-50',

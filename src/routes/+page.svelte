@@ -43,17 +43,7 @@
     <div class="mx-auto max-w-[40rem]">
       <div aria-hidden="true" class="h-[1px] bg-slate-700"></div>
       <div class="flex items-center justify-between p-2">
-        <p class="text-sm text-slate-500">
-          <a
-            href="https://www.ansonh.com"
-            target="_blank"
-            rel="noreferrer"
-            class=" text-cyan-600 transition hover:text-cyan-500"
-          >
-            Anson Heung
-          </a>
-          © {new Date().getFullYear()}
-        </p>
+        <p class="text-sm text-slate-500">vyrn © 2025</p>
         <a
           href="https://github.com/AnsonH/plinko-game"
           target="_blank"
@@ -61,7 +51,7 @@
           class="flex items-center gap-1 p-1 text-sm text-slate-500 transition hover:text-cyan-500"
         >
           <GitHubLogo class="size-4" weight="bold" />
-          <span>Source Code</span>
+          <span>Original Source Code</span>
         </a>
       </div>
     </div>

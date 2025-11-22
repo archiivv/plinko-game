@@ -31,6 +31,20 @@
         <Label.Root for="isAnimationOn" class="text-sm  text-white">Animations</Label.Root>
       </div>
 
+      <div class="flex flex-col gap-2">
+        <p class="text-sm font-medium text-white">Add money</p>
+        <div class="flex gap-2">
+          {#each [100, 500, 1000] as amount}
+            <button
+              onclick={() => ($balance += amount)}
+              class="touch-manipulation rounded-md bg-green-500 px-3 py-2 text-sm font-semibold text-gray-900 transition-colors hover:bg-green-400 active:bg-green-600"
+            >
+              +${amount}
+            </button>
+          {/each}
+        </div>
+      </div>
+
       <button
         onclick={() => ($balance = DEFAULT_BALANCE)}
         class="touch-manipulation self-start rounded-md bg-red-500 px-3 py-2 text-sm text-white transition-colors hover:bg-red-400 active:bg-red-600"
